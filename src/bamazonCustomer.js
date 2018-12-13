@@ -25,7 +25,6 @@ connection.connect(function (err) {
     if (command === "reset" || command === "-r") {
         initializeDb();
         console.log('Database seeded.')
-        return 0;
     }
 
     promptUser();
@@ -78,10 +77,11 @@ function getProduct(id, requestedAmount) {
             stock_quantity: inStock
         } = row;
 
-        if (inStock < requestedAmount) {
+        if (inStock == 0)
             console.log("Aww, sorry! Out of those!")
-            return;
-        } else {
+        else if (inStock < requestedAmount)
+            console.log("We don't have that many...");
+        else {
             inStock -= requestedAmount;
             updateProducts(id, inStock);
         }
