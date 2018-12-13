@@ -11,26 +11,22 @@ var connection = mysql.createConnection({
     multipleStatements: true
 })
 
-
-
 connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
 
     initializeDb();
-    
-    promptUser
+    promptUser();
 })
 
 function promptUser() {
-    inquirer.query({
+    inquirer.prompt({
         name: "id",
         message: "Id of the product?",
-    }).then(function (id) {
-        console.log(id)
-        readProducts(id);
+    }).then(function (response) {
+        console.log(response.id)
+        readProducts(response.id);
     })
-
 }
 
 function initializeDb() {
@@ -45,24 +41,26 @@ function initializeDb() {
         if (err) throw err;
     });
 
+    //Protect against injection attacks
     connection.multipleStatements = false;
 }
 
 function readProducts(id) {
-    connection.query({
-        id
-    }, "select * from products where ?", function (err, res) {
+    let props = {
+        item_id: id
+    };
+    connection.query("select * from products where ?", props, function (err, res) {
         if (err) throw err;
         console.table(res);
     })
 }
 
-function readProducts() {
-    connection.query("select * from products", function (err, res) {
-        if (err) throw err;
-        console.table(res);
-    })
-}
+// function readProducts() {
+//     connection.query("select * from products", function (err, res) {
+//         if (err) throw err;
+//         console.table(res);
+//     })
+// }
 
 function deleteProduct(props) {
     connection.query("delete from products where ?", props, function (err, res) {
@@ -70,8 +68,3 @@ function deleteProduct(props) {
         console.log(res);
     })
 }
-
-// deleteProduct({
-//     price: 1.5
-// });
-// readProducts();
