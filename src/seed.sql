@@ -14,6 +14,6 @@ insert into products (item_id, product_name, department_name, price, stock_quant
 insert into products (product_name, department_name, price, stock_quantity) values ('saw', 'tools', 15.20, 3);
 insert into products (product_name, department_name, price, stock_quantity) values ('blue paint', 'tools', 17.88, 4);
 insert into products (product_name, department_name, price, stock_quantity) values ('red paint', 'tools', 17.88, 2);
-insert into products (product_name, department_name, price, stock_quantity) values ('gold paint', 'tools', 17.88, 1);
+insert into products (product_name, department_name, price, stock_quantity) values ('gold paint', 'tools', 28.89, 1);
 
 select * from products;

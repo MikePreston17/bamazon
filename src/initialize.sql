@@ -11,4 +11,4 @@ create table products
     price float default 0.00,
     stock_quantity int not null,
     primary key (item_id)
-)
+);
