@@ -29,25 +29,7 @@ connection.connect(function (err) {
     }
 
     promptUser();
-
 })
-
-function promptUser() {
-    inquirer.prompt([{
-        name: "id",
-        message: "Id of the product?",
-    }, {
-        name: "limit",
-        message: "How many?",
-    }]).then(function (response) {
-        let {
-            id,
-            limit
-        } = response;
-
-        getProduct(id, limit);
-    })
-}
 
 function initializeDb() {
     let seedText = fs.readFileSync('seed.sql').toString();
@@ -65,6 +47,22 @@ function initializeDb() {
     connection.multipleStatements = false;
 }
 
+function promptUser() {
+    inquirer.prompt([{
+        name: "id",
+        message: "Id of the product?",
+    }, {
+        name: "limit",
+        message: "How many?",
+    }]).then(function (response) {
+        let {
+            id,
+            limit
+        } = response;
+
+        getProduct(id, limit);
+    })
+}
 
 function getProduct(id, requestedAmount) {
     let props = {
