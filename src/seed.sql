@@ -17,3 +17,6 @@ insert into products (product_name, department_name, price, stock_quantity) valu
 insert into products (product_name, department_name, price, stock_quantity) values ('gold paint', 'tools', 28.89, 1);
 
 select * from products;
+
+
+#update products set ? where id = ?

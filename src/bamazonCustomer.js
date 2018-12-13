@@ -11,21 +11,41 @@ var connection = mysql.createConnection({
     multipleStatements: true
 })
 
+let {
+    2: command,
+    3: rest
+} = process.argv;
+
+command = command && command.toLowerCase();
+
 connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
 
-    initializeDb();
+    if (command === "reset" || command === "-r") {
+        initializeDb();
+        console.log('Database seeded.')
+        return 0;
+    }
+
     promptUser();
+
 })
 
 function promptUser() {
-    inquirer.prompt({
+    inquirer.prompt([{
         name: "id",
         message: "Id of the product?",
-    }).then(function (response) {
-        console.log(response.id)
-        readProducts(response.id);
+    }, {
+        name: "limit",
+        message: "How many?",
+    }]).then(function (response) {
+        let {
+            id,
+            limit
+        } = response;
+
+        getProduct(id, limit);
     })
 }
 
@@ -45,22 +65,40 @@ function initializeDb() {
     connection.multipleStatements = false;
 }
 
-function readProducts(id) {
+
+function getProduct(id, requestedAmount) {
     let props = {
         item_id: id
     };
+
     connection.query("select * from products where ?", props, function (err, res) {
         if (err) throw err;
         console.table(res);
+
+        let row = res[0];
+        let {
+            stock_quantity: inStock
+        } = row;
+
+        if (inStock < requestedAmount) {
+            console.log("Aww, sorry! Out of those!")
+            return;
+        } else {
+            inStock -= requestedAmount;
+            updateProducts(id, inStock);
+        }
     })
 }
 
-// function readProducts() {
-//     connection.query("select * from products", function (err, res) {
-//         if (err) throw err;
-//         console.table(res);
-//     })
-// }
+function updateProducts(id, count) {
+
+    let props = [count, id];
+
+    connection.query('update products set stock_quantity = ? where item_id = ?', props, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+    });
+}
 
 function deleteProduct(props) {
     connection.query("delete from products where ?", props, function (err, res) {
