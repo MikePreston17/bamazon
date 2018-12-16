@@ -5,7 +5,7 @@
 * Bamazon will be a command line node app that takes in parameters and gives you back data.
 
 ## Screenshots
-[https://github.com/MikePreston17/bamazon/tree/master/src/screenshots/](Screenshots)
+![https://github.com/MikePreston17/bamazon/tree/master/src/screenshots/](Screenshots)
 
 ## Example Usage
 
