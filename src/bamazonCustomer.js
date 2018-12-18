@@ -1,6 +1,6 @@
-const mysql = require('mysql');
-const fs = require('fs');
-const inquirer = require('inquirer');
+const mysql = require("mysql");
+const fs = require("fs");
+const inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -9,7 +9,7 @@ var connection = mysql.createConnection({
     password: "birman",
     database: "bamazon",
     multipleStatements: true
-})
+});
 
 let {
     2: command,
@@ -24,15 +24,15 @@ connection.connect(function (err) {
 
     if (command === "reset" || command === "-r") {
         initializeDb();
-        console.log('Database seeded.')
+        console.log("Database seeded.");
     }
 
     promptUser();
-})
+});
 
 function initializeDb() {
-    let seedText = fs.readFileSync('seed.sql').toString();
-    let initText = fs.readFileSync('initialize.sql').toString();
+    let seedText = fs.readFileSync("seed.sql").toString();
+    let initText = fs.readFileSync("initialize.sql").toString();
 
     connection.query(initText, function (err) {
         if (err) throw err;
@@ -47,20 +47,24 @@ function initializeDb() {
 }
 
 function promptUser() {
-    inquirer.prompt([{
-        name: "id",
-        message: "Id of the product?",
-    }, {
-        name: "limit",
-        message: "How many?",
-    }]).then(function (response) {
-        let {
-            id,
-            limit
-        } = response;
+    inquirer
+        .prompt([{
+                name: "id",
+                message: "Id of the product?"
+            },
+            {
+                name: "limit",
+                message: "How many?"
+            }
+        ])
+        .then(function (response) {
+            let {
+                id,
+                limit
+            } = response;
 
-        getProduct(id, limit);
-    })
+            getProduct(id, limit);
+        });
 }
 
 function getProduct(id, requestedAmount) {
@@ -70,6 +74,8 @@ function getProduct(id, requestedAmount) {
 
     connection.query("select * from products where ?", props, function (err, res) {
         if (err) throw err;
+        if (!res) return;
+
         console.table(res);
 
         let row = res[0];
@@ -77,30 +83,38 @@ function getProduct(id, requestedAmount) {
             stock_quantity: inStock
         } = row;
 
-        if (inStock == 0)
-            console.log("Aww, sorry! Out of those!")
+        if (inStock == 0) console.log("Aww, sorry! Out of those!");
         else if (inStock < requestedAmount)
             console.log("We don't have that many...");
         else {
             inStock -= requestedAmount;
             updateProducts(id, inStock);
         }
-    })
+    });
 }
 
 function updateProducts(id, count) {
-
     let props = [count, id];
 
-    connection.query('update products set stock_quantity = ? where item_id = ?', props, function (err, res) {
-        if (err) throw err;
-        console.table(res);
-    });
+    connection.query(
+        "update products set stock_quantity = ? where item_id = ?",
+        props,
+        function (err, res) {
+            if (err) throw err;
+            if (!res) return;
+            console.table(res);
+        }
+    );
 }
 
 function deleteProduct(props) {
     connection.query("delete from products where ?", props, function (err, res) {
         if (err) throw err;
+        if (!res) return;
         console.log(res);
-    })
+    });
 }
+
+// deleteProduct({
+//     id: 10002
+// });

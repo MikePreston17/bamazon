@@ -1,3 +1,5 @@
+use bamazon;
+
 #seed data for products table
 insert into products (item_id, product_name, department_name, price, stock_quantity) values (10000, 'tennis ball', 'sports', 1.50, 4);
 insert into products (product_name, department_name, price, stock_quantity) values ('basketball', 'sports', 11.24, 5);
@@ -17,6 +19,5 @@ insert into products (product_name, department_name, price, stock_quantity) valu
 insert into products (product_name, department_name, price, stock_quantity) values ('gold paint', 'tools', 28.89, 1);
 
 select * from products;
-
 
 #update products set ? where id = ?

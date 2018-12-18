@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/MikePreston17/bamazon#readme",
   "dependencies": {
-    "inquirer": "^6.2.1",    
-    "mysql" : "^2.16.0"
+    "cli-table": "^0.3.1",
+    "inquirer": "^6.2.1",
+    "mysql": "^2.16.0"
   }
 }
